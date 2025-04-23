@@ -1,5 +1,8 @@
 #pragma once
 #include <unordered_map>
+#include <mutex>
+#include <string>
+#include <iostream>
 // gRPC 核心库
 #include <grpcpp/grpcpp.h>
 #include <grpcpp/server_builder.h>
@@ -46,14 +49,18 @@ class StatusServiceImpl final : public StatusService::Service
 {
 public:
     StatusServiceImpl();
+    ~StatusServiceImpl(); // 添加析构函数声明
+
     Status GetChatServer(ServerContext* context, const GetChatServerReq* request,
         GetChatServerRsp* reply) override;
     Status Login(ServerContext* context, const LoginReq* request,
         LoginRsp* reply);
 
 private:
-    void insertToken(int uid, std::string token);
+    void insertToken(int uid, const std::string& token);
     ChatServer getChatServer();
+    void updateServerConnectionCount(const std::string& serverName, int delta);
+
     std::unordered_map<std::string, ChatServer> _servers;
     std::mutex _server_mutex;
     std::unordered_map<int, std::string> _tokens;

@@ -49,7 +49,8 @@ public:
     Status GetChatServer(ServerContext* context, const GetChatServerReq* request,
         GetChatServerRsp* reply) override;
     Status Login(ServerContext* context, const LoginReq* request,
-        LoginRsp* reply) override;
+        LoginRsp* reply);
+
 private:
     void insertToken(int uid, std::string token);
     ChatServer getChatServer();
